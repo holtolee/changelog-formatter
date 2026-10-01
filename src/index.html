@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
+<title>Changelog Formatter</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <div class="scanlines"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" aria-hidden="true">
+        <defs>
+          <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00e5ff" />
+            <stop offset="1" stop-color="#e6057b" />
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="36" height="36" rx="10" fill="none" stroke="url(#logo-gradient)" stroke-width="2" />
+        <g fill="#00e5ff">
+          <circle cx="11" cy="14" r="1.8" />
+          <circle cx="11" cy="20" r="1.8" />
+          <circle cx="15" cy="26" r="1.8" />
+        </g>
+        <g stroke="url(#logo-gradient)" stroke-width="2.4" stroke-linecap="round">
+          <path d="M16 14h13" />
+          <path d="M16 20h9" />
+          <path d="M20 26h9" />
+        </g>
+      </svg>
+      <div>
+        <h1><span class="neon-cyan">Changelog</span> <span class="neon-magenta">Formatter</span></h1>
+        <p class="subtitle">GitHub « What's Changed » → changelog Teams groupé par équipe · Azure DevOps</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" id="gh-indicator" class="pill" title="Statut GitHub CLI">
+        <span class="dot"></span>GitHub CLI
+      </button>
+      <button type="button" id="open-settings" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" /><circle cx="15" cy="6" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="17" cy="18" r="2" /></svg>
+        Paramètres
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card card-source">
+      <header class="card-head">
+        <span class="step">01</span>
+        <h2>Source</h2>
+        <span class="card-sub">Release GitHub</span>
+      </header>
+
+      <div class="field-grid">
+        <label class="field">Organisation
+          <select id="gh-owner" disabled><option value="">— chargement… —</option></select>
+        </label>
+        <label class="field">Repo
+          <select id="gh-repo" disabled><option value="">— choisir une orga —</option></select>
+        </label>
+      </div>
+
+      <button type="button" id="load-releases" class="btn btn-outline btn-block">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8" /><path d="M21 3v5h-5" /></svg>
+        Actualiser les releases
+      </button>
+
+      <label class="field">Release
+        <select id="gh-release"><option value="">— charger les releases —</option></select>
+      </label>
+
+      <label class="field">Version affichée
+        <input type="text" id="version-input" placeholder="0.10.0" />
+      </label>
+
+      <button type="button" id="generate-btn" class="btn btn-primary btn-block btn-lg">
+        <svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" /></svg>
+        Générer
+      </button>
+
+      <div id="main-status" class="status"></div>
+    </section>
+
+    <section class="card card-output">
+      <header class="card-head">
+        <span class="step">02</span>
+        <h2>Changelog</h2>
+        <div class="card-actions">
+          <button type="button" id="copy-btn" class="btn btn-outline btn-sm">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 0 1 2-2h9" /></svg>
+            Copier
+          </button>
+          <button type="button" id="export-btn" class="btn btn-ghost btn-sm">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" /></svg>
+            Exporter...
+          </button>
+        </div>
+      </header>
+
+      <div class="terminal">
+        <div class="terminal-bar" aria-hidden="true">
+          <span class="light light-magenta"></span>
+          <span class="light light-amber"></span>
+          <span class="light light-cyan"></span>
+          <span class="terminal-title">changelog.txt</span>
+        </div>
+        <textarea id="output" spellcheck="false" placeholder="Le changelog généré apparaîtra ici…"></textarea>
+      </div>
+
+      <div id="output-status" class="status"></div>
+    </section>
+
+    <section class="card card-send">
+      <header class="card-head">
+        <span class="step">03</span>
+        <h2>Diffusion</h2>
+        <span class="card-sub">Microsoft Teams</span>
+      </header>
+
+      <label class="field">Canal Teams
+        <select id="teams-target">
+          <option value="prerelease">Pre-release</option>
+          <option value="release">Release</option>
+        </select>
+      </label>
+
+      <button type="button" id="send-teams-btn" class="btn btn-secondary btn-block">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" /></svg>
+        Envoyer sur Teams
+      </button>
+
+      <div id="teams-status" class="status"></div>
+    </section>
+
+    <details id="debug-panel" class="card card-debug">
+      <summary>
+        <span class="step">//</span>
+        <span class="summary-title">Détail du parsing</span>
+        <span class="card-sub">debug</span>
+        <span id="debug-count" class="badge">0</span>
+      </summary>
+      <div class="table-wrap">
+        <table id="debug-table">
+          <thead><tr><th>Type</th><th>Ticket</th><th>Description</th><th>Auteur</th><th>PR</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </main>
+
+  <dialog id="settings-dialog" class="settings" aria-labelledby="settings-title">
+    <div class="dialog-head">
+      <h2 id="settings-title">Paramètres</h2>
+      <button type="button" id="close-settings" class="icon-btn" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <div id="encryption-warning" class="warning" hidden>
+        ⚠️ Le chiffrement des tokens n'est pas disponible sur ce système : ils seront stockés en clair localement.
+      </div>
+
+      <section class="settings-section">
+        <h3>GitHub</h3>
+        <p class="hint">
+          Authentification via GitHub CLI (pas de token à saisir). Installe
+          <code>gh</code> (https://cli.github.com) puis lance <code>gh auth login</code> dans un terminal.
+        </p>
+        <div class="inline-row">
+          <button type="button" id="check-gh-auth" class="btn btn-outline btn-sm">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+            Vérifier
+          </button>
+        </div>
+        <pre id="gh-auth-status" class="status status-block">Statut inconnu.</pre>
+      </section>
+
+      <section class="settings-section">
+        <h3>Azure DevOps</h3>
+        <div class="field-grid field-grid-3">
+          <label class="field">Organisation
+            <input type="text" id="azure-org" placeholder="organization" autofocus />
+          </label>
+          <label class="field">Projet
+            <input type="text" id="azure-project" placeholder="project" />
+          </label>
+          <label class="field">Token (PAT)
+            <input type="password" id="azure-token" />
+          </label>
+        </div>
+        <div class="inline-row">
+          <button type="button" id="load-azure-metadata" class="btn btn-outline btn-sm">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12v9" /><path d="m8 17 4 4 4-4" /><path d="M20 16.6A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3" /></svg>
+            Charger équipes et types depuis Azure DevOps
+          </button>
+          <span id="azure-metadata-status" class="status"></span>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Équipes <span class="h3-sub">Area Path → nom + emoji</span></h3>
+        <p class="hint">Renseigne l'emoji de chaque équipe ; les nouvelles areas découvertes sont ajoutées automatiquement sans emoji.</p>
+        <div class="table-wrap">
+          <table id="team-mapping-table" class="mapping-table">
+            <thead><tr><th>Area Path (contient)</th><th>Nom équipe</th><th>Emoji</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" id="add-team-row" class="btn btn-ghost btn-sm btn-add">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          Ajouter une équipe
+        </button>
+      </section>
+
+      <section class="settings-section">
+        <h3>Types de work item <span class="h3-sub">Azure DevOps → libellé + emoji</span></h3>
+        <p class="hint">Renseigne l'emoji de chaque type ; les nouveaux types découverts sont ajoutés automatiquement sans emoji.</p>
+        <div class="table-wrap">
+          <table id="type-mapping-table" class="mapping-table">
+            <thead><tr><th>Type Azure DevOps</th><th>Libellé</th><th>Emoji</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" id="add-type-row" class="btn btn-ghost btn-sm btn-add">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          Ajouter un type
+        </button>
+      </section>
+
+      <section class="settings-section">
+        <h3>Microsoft Teams</h3>
+        <p class="hint">
+          Dans chaque canal Teams (pré-release et release) : ⋯ → Workflows → "Post to a channel when a
+          webhook request is received", puis colle l'URL générée ici. L'app envoie une pièce jointe
+          Adaptive Card ; dans l'action "Post card in a chat or channel", utilise
+          <code>attachments[0].content</code> comme carte à publier.
+        </p>
+        <div class="field-grid">
+          <label class="field">Webhook pré-release
+            <input type="password" id="teams-webhook-prerelease" placeholder="https://.../workflows/..." />
+          </label>
+          <label class="field">Webhook release
+            <input type="password" id="teams-webhook-release" placeholder="https://.../workflows/..." />
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <div class="dialog-foot">
+      <span id="settings-status" class="status"></span>
+      <button type="button" id="save-settings" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z" /><path d="M8 3v5h8" /><path d="M8 21v-7h8v7" /></svg>
+        Enregistrer
+      </button>
+    </div>
+  </dialog>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

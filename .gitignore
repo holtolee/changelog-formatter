@@ -1,0 +1,9 @@
+node_modules/
+dist/
+
+# Secrets et fichiers locaux : ne jamais versionner
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
