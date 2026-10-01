@@ -7,7 +7,7 @@
     "name": "holtolee",
     "email": "holtol33@gmail.com"
   },
-  "homepage": "https://github.com/holtolee/changelog",
+  "homepage": "https://github.com/holtolee/changelog-formatter",
   "desktopName": "changelog-formatter.desktop",
   "main": "electron/main.js",
   "private": true,
@@ -17,8 +17,7 @@
     "dist": "electron-builder",
     "dist:linux": "electron-builder --linux",
     "dist:mac": "electron-builder --mac",
-    "dist:win": "electron-builder --win",
-    "render:backdrop": "electron scripts/render-backdrop.js"
+    "dist:win": "electron-builder --win"
   },
   "build": {
     "appId": "com.holtolee.changelog-formatter",

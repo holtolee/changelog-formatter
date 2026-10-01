@@ -111,19 +111,6 @@ body {
 
 svg { flex: none; }
 
-/* ---------- Décor synthwave ---------- */
-
-/* Image fixe générée par scripts/render-backdrop.js (npm run render:backdrop) :
-   pas d'animation ni de filtre recalculé pendant l'utilisation. */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--bg-0) url("assets/backdrop.jpg") 50% 64% / cover no-repeat;
-  will-change: transform;
-}
-
 .scanlines {
   position: absolute;
   inset: 0;
@@ -845,11 +832,6 @@ dialog.settings[open] {
   display: flex;
   flex-direction: column;
   animation: dialog-in 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-}
-
-dialog.settings::backdrop {
-  background: rgba(4, 1, 10, 0.7);
-  backdrop-filter: blur(6px);
 }
 
 @keyframes dialog-in {

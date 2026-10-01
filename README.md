@@ -179,12 +179,9 @@ electron/
   main.js       # process principal : fenêtre, IPC, orchestration
   preload.js    # API exposée au renderer via contextBridge
   settings.js   # stockage des paramètres (electron-store) + chiffrement du PAT Azure DevOps
-scripts/
-  render-backdrop.js  # régénère src/assets/backdrop.jpg (npm run render:backdrop)
 src/
   index.html    # interface
   style.css     # thème néon rétro (cyan #00e5ff / magenta #e6057b)
-  assets/       # backdrop.jpg : décor synthwave pré-rendu en image fixe
   fonts/        # polices embarquées (Orbitron, Chakra Petch, JetBrains Mono — SIL OFL)
   renderer.js   # logique UI
   github.js     # appels GitHub via `gh api`
